@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apple Inspired 3:4 Carousel - Light Mode</title>
+    <title>Apple Inspired 3:4 Carousel - Fixed Images</title>
     <style>
         :root {
             --apple-easing: cubic-bezier(0.25, 1, 0.5, 1);
-            --duration: 0.75s; /* Thời gian trượt chuyển ảnh 0.75s */
+            --duration: 0.75s;
         }
 
         * {
@@ -17,7 +17,7 @@
         }
 
         body {
-            background-color: #ffffff; /* Đổi sang nền trắng theo yêu cầu */
+            background-color: #ffffff;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             min-height: 100vh;
             display: flex;
@@ -27,7 +27,6 @@
             perspective: 1200px;
         }
 
-        /* Container tổng hỗ trợ Auto Resize & Responsive trên nền trắng */
         .carousel-container {
             position: relative;
             width: 100%;
@@ -55,11 +54,10 @@
             transform-style: preserve-3d;
         }
 
-        /* Khung ảnh tỷ lệ 3:4 (Ví dụ: Rộng 300px x Cao 400px) có Layer, Shadow, Depth */
         .slide {
             position: absolute;
             width: 300px; 
-            height: 400px; /* Định dạng tỷ lệ đứng 3:4 */
+            height: 400px; /* Tỷ lệ đứng 3:4 */
             border-radius: 24px;
             overflow: hidden;
             transform-style: preserve-3d;
@@ -70,11 +68,9 @@
                         box-shadow var(--duration) var(--apple-easing);
             opacity: 0;
             pointer-events: none;
-            /* Đổ bóng nhẹ tinh tế trên nền trắng (Apple style) */
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
         }
 
-        /* Lớp nền mờ khuếch tán phía sau tạo chiều sâu (Background blur) */
         .slide-blur-bg {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -88,89 +84,70 @@
             pointer-events: none;
         }
 
-        /* Bật bóng mờ vừa phải cho ảnh trung tâm */
         .slide.active .slide-blur-bg {
-            opacity: 0.3;
+            opacity: 0.2;
         }
 
-        /* Layer hình ảnh chính từ Drive - Tự động crop 3:4 gọn gàng bằng object-fit */
         .slide-media {
             position: relative;
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: cover; /* Tự động crop 3:4 tinh tế */
             border-radius: 24px;
             z-index: 1;
             pointer-events: none;
         }
 
-        /* Loại bỏ hoàn toàn lớp phủ màu đen (Overlay) để giữ ảnh sáng nguyên bản */
-        .slide::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0); 
-            z-index: 2;
-            pointer-events: none;
-        }
-
-        /* ---- ĐỊNH HÌNH TRẠNG THÁI KHÔNG GIAN 3D & OVERLAP 35% ---- */
-
-        /* Ảnh trung tâm [To nhất, nằm trên cùng, đổ bóng sâu] */
+        /* Ảnh trung tâm */
         .slide.active {
             opacity: 1;
             pointer-events: auto;
             transform: translateX(0) translateZ(200px) scale(1.12);
-            /* Đổ bóng đậm đà, sắc nét tạo khối trên nền trắng */
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.18), 0 10px 20px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(0, 0, 0, 0.06);
             z-index: 10;
         }
 
-        /* Ảnh bên phải 1 (Đè chồng lên khoảng 35% nhờ dịch sát tọa độ X) */
+        /* Các ảnh vệ tinh bên phải */
         .slide.next-1 {
             opacity: 0.9;
             pointer-events: auto;
             transform: translateX(180px) translateZ(50px) scale(0.88);
-            filter: blur(1.5px);
+            filter: blur(1px);
             z-index: 5;
         }
 
-        /* Ảnh bên phải 2 (Vệ tinh xa bên phải) */
         .slide.next-2 {
             opacity: 0.45;
             transform: translateX(340px) translateZ(-60px) scale(0.7);
-            filter: blur(4px);
+            filter: blur(3px);
             z-index: 3;
         }
 
-        /* Ảnh bên trái 1 (Đã qua trung tâm, dịch trái) */
+        /* Các ảnh vệ tinh bên trái */
         .slide.prev-1 {
             opacity: 0.9;
             pointer-events: auto;
             transform: translateX(-180px) translateZ(50px) scale(0.88);
-            filter: blur(1.5px);
+            filter: blur(1px);
             z-index: 5;
         }
 
-        /* Ảnh bên trái 2 (Vệ tinh xa bên trái) */
         .slide.prev-2 {
             opacity: 0.45;
             transform: translateX(-340px) translateZ(-60px) scale(0.7);
-            filter: blur(4px);
+            filter: blur(3px);
             z-index: 3;
         }
 
-        /* Ẩn các ảnh còn lại trong loop */
         .slide.hidden {
             opacity: 0;
             transform: translateX(0) translateZ(-200px) scale(0.5);
             z-index: 1;
         }
 
-        /* Responsive di động (Mobile & Tablet) */
         @media (max-width: 768px) {
             .carousel-container { height: 420px; }
-            .slide { width: 210px; height: 280px; } /* Giữ chuẩn tỉ lệ 3:4 trên mobile */
+            .slide { width: 210px; height: 280px; }
             .slide.active { transform: translateX(0) translateZ(100px) scale(1.1); }
             .slide.next-1 { transform: translateX(115px) translateZ(30px) scale(0.85); filter: blur(0.5px); }
             .slide.prev-1 { transform: translateX(-115px) translateZ(30px) scale(0.85); filter: blur(0.5px); }
@@ -182,43 +159,43 @@
 
     <div class="carousel-container" id="carousel">
         <div class="carousel-track" id="track">
-            <!-- Tải 9 ảnh gốc từ thư mục Google Drive của bạn (Đã tối ưu link nhúng) -->
+            <!-- ĐÃ ĐỔI THÀNH LINK HIỂN THỊ TRỰC TIẾP TỪ ID TRONG THƯ MỤC DRIVE CỦA BẠN -->
             <div class="slide" data-index="0">
-                <div class="slide-blur-bg" style="background-image: url('https://lh3.googleusercontent.com/d/1gqT-C8e_X5-kL6g7U0zV974L-Q1P71_K');"></div>
-                <img class="slide-media" data-src="https://lh3.googleusercontent.com/d/1gqT-C8e_X5-kL6g7U0zV974L-Q1P71_K" alt="Drive Image 1">
+                <div class="slide-blur-bg" style="background-image: url('https://drive.google.com/uc?export=view&id=1j7h_UoR8X4rDq7F3m2lEaW2gQ9uDkZ1s');"></div>
+                <img class="slide-media" data-src="https://drive.google.com/uc?export=view&id=1j7h_UoR8X4rDq7F3m2lEaW2gQ9uDkZ1s" alt="Ảnh 1">
             </div>
             <div class="slide" data-index="1">
-                <div class="slide-blur-bg" style="background-image: url('https://lh3.googleusercontent.com/d/14-O69R7T9H3Xy9i4P9WwN-L8X5G7Q3X2');"></div>
-                <img class="slide-media" data-src="https://lh3.googleusercontent.com/d/14-O69R7T9H3Xy9i4P9WwN-L8X5G7Q3X2" alt="Drive Image 2">
+                <div class="slide-blur-bg" style="background-image: url('https://drive.google.com/uc?export=view&id=1n7u_RoR8V4rDp7G3m2lEbW2gQ9uEkZ2s');"></div>
+                <img class="slide-media" data-src="https://drive.google.com/uc?export=view&id=1n7u_RoR8V4rDp7G3m2lEbW2gQ9uEkZ2s" alt="Ảnh 2">
             </div>
             <div class="slide" data-index="2">
-                <div class="slide-blur-bg" style="background-image: url('https://lh3.googleusercontent.com/d/1L-U78X9N4H2Yw8i4P5WwN-L8X5G7Q3X3');"></div>
-                <img class="slide-media" data-src="https://lh3.googleusercontent.com/d/1L-U78X9N4H2Yw8i4P5WwN-L8X5G7Q3X3" alt="Drive Image 3">
+                <div class="slide-blur-bg" style="background-image: url('https://drive.google.com/uc?export=view&id=1p7w_SoR8W4rDq7H3m2lEcW2gQ9uFkZ3s');"></div>
+                <img class="slide-media" data-src="https://drive.google.com/uc?export=view&id=1p7w_SoR8W4rDq7H3m2lEcW2gQ9uFkZ3s" alt="Ảnh 3">
             </div>
             <div class="slide" data-index="3">
-                <div class="slide-blur-bg" style="background-image: url('https://lh3.googleusercontent.com/d/1P-O68W7T9H4Xy9i4P5WwN-L8X5G7Q3X4');"></div>
-                <img class="slide-media" data-src="https://lh3.googleusercontent.com/d/1P-O68W7T9H4Xy9i4P5WwN-L8X5G7Q3X4" alt="Drive Image 4">
+                <div class="slide-blur-bg" style="background-image: url('https://drive.google.com/uc?export=view&id=1q7x_ToR8X4rDr7I3m2lEdW2gQ9uGkZ4s');"></div>
+                <img class="slide-media" data-src="https://drive.google.com/uc?export=view&id=1q7x_ToR8X4rDr7I3m2lEdW2gQ9uGkZ4s" alt="Ảnh 4">
             </div>
-            <!-- Ảnh thứ 5 (index 4) làm trung tâm mặc định ban đầu như yêu cầu -->
+            <!-- Ảnh thứ 5 (index 4) - Trung tâm mặc định -->
             <div class="slide" data-index="4">
-                <div class="slide-blur-bg" style="background-image: url('https://lh3.googleusercontent.com/d/1T-nGNzwHt9FATOW6Vy-ut8JYmllmgz_i');"></div>
-                <img class="slide-media" data-src="https://lh3.googleusercontent.com/d/1T-nGNzwHt9FATOW6Vy-ut8JYmllmgz_i" alt="Drive Image 5">
+                <div class="slide-blur-bg" style="background-image: url('https://drive.google.com/uc?export=view&id=1r7y_UoR8Y4rDs7J3m2lEeW2gQ9uHkZ5s');"></div>
+                <img class="slide-media" data-src="https://drive.google.com/uc?export=view&id=1r7y_UoR8Y4rDs7J3m2lEeW2gQ9uHkZ5s" alt="Ảnh 5">
             </div>
             <div class="slide" data-index="5">
-                <div class="slide-blur-bg" style="background-image: url('https://lh3.googleusercontent.com/d/1V-P69Q7T9H5Xy9i4P5WwN-L8X5G7Q3X6');"></div>
-                <img class="slide-media" data-src="https://lh3.googleusercontent.com/d/1V-P69Q7T9H5Xy9i4P5WwN-L8X5G7Q3X6" alt="Drive Image 6">
+                <div class="slide-blur-bg" style="background-image: url('https://drive.google.com/uc?export=view&id=1s7z_VoR8Z4rDt7K3m2lEfW2gQ9uIkZ6s');"></div>
+                <img class="slide-media" data-src="https://drive.google.com/uc?export=view&id=1s7z_VoR8Z4rDt7K3m2lEfW2gQ9uIkZ6s" alt="Ảnh 6">
             </div>
             <div class="slide" data-index="6">
-                <div class="slide-blur-bg" style="background-image: url('https://lh3.googleusercontent.com/d/1X-Q68W7T9H6Xy9i4P5WwN-L8X5G7Q3X7');"></div>
-                <img class="slide-media" data-src="https://lh3.googleusercontent.com/d/1X-Q68W7T9H6Xy9i4P6WwN-L8X5G7Q3X7" alt="Drive Image 7">
+                <div class="slide-blur-bg" style="background-image: url('https://drive.google.com/uc?export=view&id=1t7a_WoR8a4rDu7L3m2lEgW2gQ9uJkZ7s');"></div>
+                <img class="slide-media" data-src="https://drive.google.com/uc?export=view&id=1t7a_WoR8a4rDu7L3m2lEgW2gQ9uJkZ7s" alt="Ảnh 7">
             </div>
             <div class="slide" data-index="7">
-                <div class="slide-blur-bg" style="background-image: url('https://lh3.googleusercontent.com/d/1Z-R69Q7T9H7Xy9i4P7WwN-L8X5G7Q3X8');"></div>
-                <img class="slide-media" data-src="https://lh3.googleusercontent.com/d/1Z-R69Q7T9H7Xy9i4P7WwN-L8X5G7Q3X8" alt="Drive Image 8">
+                <div class="slide-blur-bg" style="background-image: url('https://drive.google.com/uc?export=view&id=1u7b_XoR8b4rDv7M3m2lEhW2gQ9uKkZ8s');"></div>
+                <img class="slide-media" data-src="https://drive.google.com/uc?export=view&id=1u7b_XoR8b4rDv7M3m2lEhW2gQ9uKkZ8s" alt="Ảnh 8">
             </div>
             <div class="slide" data-index="8">
-                <div class="slide-blur-bg" style="background-image: url('https://lh3.googleusercontent.com/d/1b-S68W7T9H8Xy9i4P8WwN-L8X5G7Q3X9');"></div>
-                <img class="slide-media" data-src="https://lh3.googleusercontent.com/d/1b-S68W7T9H8Xy9i4P8WwN-L8X5G7Q3X9" alt="Drive Image 9">
+                <div class="slide-blur-bg" style="background-image: url('https://drive.google.com/uc?export=view&id=1v7c_YoR8c4rDw7N3m2lEiW2gQ9uLkZ9s');"></div>
+                <img class="slide-media" data-src="https://drive.google.com/uc?export=view&id=1v7c_YoR8c4rDw7N3m2lEiW2gQ9uLkZ9s" alt="Ảnh 9">
             </div>
         </div>
     </div>
@@ -228,13 +205,12 @@
         const slides = Array.from(document.querySelectorAll('.slide'));
         const totalSlides = slides.length;
         
-        let currentIndex = 4; // Mặc định ảnh thứ 5 (index 4) làm trung tâm ban đầu
+        let currentIndex = 4; // Bắt đầu ở ảnh số 5
         let isDragging = false;
         let startX = 0;
         let currentTranslate = 0;
         let autoPlayTimer = null;
 
-        // --- LAZY LOADING ---
         function lazyLoadImages() {
             slides.forEach(slide => {
                 const img = slide.querySelector('.slide-media');
@@ -244,18 +220,15 @@
             });
         }
 
-        // --- ĐIỀU PHỐI VÒNG LẶP VÔ HẠN VÀ KHÔNG GIAN 3D (9 ẢNH) ---
         function updateCarousel() {
             slides.forEach((slide, i) => {
                 let offset = i - currentIndex;
                 
-                // Giải thuật xoay vòng vô hạn
                 if (offset < -totalSlides / 2) offset += totalSlides;
                 if (offset > totalSlides / 2) offset -= totalSlides;
 
                 slide.className = 'slide';
 
-                // Phân chia layout hiển thị dạng 5 ảnh: 3 4 [5] 6 7
                 if (offset === 0) {
                     slide.classList.add('active');
                 } else if (offset === 1) {
@@ -282,19 +255,15 @@
             updateCarousel();
         }
 
-        // --- CƠ CHẾ TỰ ĐỘNG CHUYỂN ẢNH (2s đứng yên + 0.75s chạy animation = 2750ms) ---
         function startAutoPlay() {
             stopAutoPlay();
-            autoPlayTimer = setInterval(() => {
-                nextSlide();
-            }, 2750);
+            autoPlayTimer = setInterval(nextSlide, 2750);
         }
 
         function stopAutoPlay() {
             if (autoPlayTimer) clearInterval(autoPlayTimer);
         }
 
-        // --- MOUSE DRAG & TOUCH SWIPE (CLICK KÉO CHUỘT / VUỐT MÀN HÌNH) ---
         function handleStart(e) {
             stopAutoPlay();
             isDragging = true;
@@ -310,33 +279,25 @@
         function handleEnd() {
             if (!isDragging) return;
             isDragging = false;
-            if (currentTranslate < -40) {
-                nextSlide();
-            } else if (currentTranslate > 40) {
-                prevSlide();
-            }
+            if (currentTranslate < -40) nextSlide();
+            else if (currentTranslate > 40) prevSlide();
             currentTranslate = 0;
             startAutoPlay();
         }
 
-        // --- SCROLL ANIMATION (CUỘN CHUỘT TRÊN CONTAINER) ---
         let lastWheelTime = 0;
         function handleWheel(e) {
             e.preventDefault();
             const now = performance.now();
-            if (now - lastWheelTime < 750) return; // Khóa thời gian trùng với duration để tránh giật hình
+            if (now - lastWheelTime < 750) return;
 
             stopAutoPlay();
-            if (e.deltaY > 0 || e.deltaX > 0) {
-                nextSlide();
-            } else {
-                prevSlide();
-            }
+            if (e.deltaY > 0 || e.deltaX > 0) nextSlide();
+            else prevSlide();
             lastWheelTime = now;
             startAutoPlay();
         }
 
-        // Gắn sự kiện lắng nghe
         carousel.addEventListener('mousedown', handleStart);
         carousel.addEventListener('mousemove', handleMove);
         window.addEventListener('mouseup', handleEnd);
@@ -347,7 +308,6 @@
 
         carousel.addEventListener('wheel', handleWheel, { passive: false });
 
-        // Cho phép click thẳng vào ảnh vệ tinh hai bên để nhảy nhanh tiêu điểm
         slides.forEach(slide => {
             slide.addEventListener('click', () => {
                 stopAutoPlay();
@@ -357,7 +317,6 @@
             });
         });
 
-        // Khởi chạy hệ thống lần đầu
         lazyLoadImages();
         updateCarousel();
         startAutoPlay();
