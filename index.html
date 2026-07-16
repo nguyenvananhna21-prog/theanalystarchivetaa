@@ -6,7 +6,7 @@
     <title>Tiến Hóa Loài Người - Bản Đầy Đủ</title>
     <style>
         :root {
-            --bg-gradient: linear-gradient(135deg, #e0f2f1 0%, #b3e5fc 50%, #c5cae9 100%);
+            --bg-color: #ffffff;
             --line-color: #2c3e50;
             --color-1: #e67e22; /* Cam */
             --color-2: #1abc9c; /* Xanh ngọc */
@@ -24,34 +24,13 @@
         }
 
         body {
-            background: var(--bg-gradient);
+            background-color: var(--bg-color);
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 40px 20px;
             overflow-x: auto;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            letter-spacing: 4px;
-            color: #2c3e50;
-            text-transform: uppercase;
-            font-weight: 300;
-        }
-
-        .header p {
-            font-size: 1rem;
-            color: #7f8c8d;
-            margin-top: 5px;
-            letter-spacing: 2px;
         }
 
         /* Timeline Container */
@@ -59,7 +38,7 @@
             position: relative;
             width: 100%;
             max-width: 1200px;
-            min-width: 1000px; /* Đảm bảo không bị vỡ layout trên màn hình nhỏ */
+            min-width: 1000px;
             height: 500px;
             display: flex;
             align-items: center;
@@ -95,7 +74,7 @@
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background-color: #fff;
+            background-color: #ffffff;
             border: 4px solid var(--line-color);
             display: flex;
             align-items: center;
@@ -103,7 +82,7 @@
             font-size: 1.25rem;
             font-weight: bold;
             color: #333;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
             cursor: pointer;
             user-select: none;
@@ -194,8 +173,8 @@
         /* HIỆU ỨNG HOVER (Mượt mà, nổi bật) */
         .timeline-node:hover .node-circle {
             transform: scale(1.25);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            background-color: #fff;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            background-color: #ffffff;
             z-index: 10;
         }
 
@@ -206,7 +185,7 @@
 
         .timeline-node:hover .content-box {
             transform: translateY(calc(var(--dir, 1) * 8px));
-            filter: drop-shadow(0px 5px 5px rgba(0,0,0,0.1));
+            filter: drop-shadow(0px 5px 5px rgba(0,0,0,0.08));
         }
 
         /* Định hướng dịch chuyển khi hover */
@@ -216,11 +195,6 @@
     </style>
 </head>
 <body>
-
-    <div class="header">
-        <h1>TIẾN HÓA LOÀI NGƯỜI</h1>
-        <p>BẢN ĐẦY ĐỦ - THẾ GIỚI & VIỆT NAM</p>
-    </div>
 
     <div class="timeline-container">
         <div class="main-line"></div>
