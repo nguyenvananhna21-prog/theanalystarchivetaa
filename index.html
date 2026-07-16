@@ -3,333 +3,289 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apple Inspired 3:4 Carousel - 10 Images</title>
+    <title>Tiến Hóa Loài Người - Bản Đầy Đủ</title>
     <style>
         :root {
-            --apple-easing: cubic-bezier(0.25, 1, 0.5, 1);
-            --duration: 0.75s;
+            --bg-gradient: linear-gradient(135deg, #e0f2f1 0%, #b3e5fc 50%, #c5cae9 100%);
+            --line-color: #2c3e50;
+            --color-1: #e67e22; /* Cam */
+            --color-2: #1abc9c; /* Xanh ngọc */
+            --color-3: #2980b9; /* Xanh dương */
+            --color-4: #8e44ad; /* Tím */
+            --color-5: #27ae60; /* Xanh lá */
+            --color-6: #d35400; /* Đỏ cam */
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: #ffffff; /* Nền trắng sạch sẽ tiệp màu Google Sites */
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg-gradient);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
-            perspective: 1200px;
+            padding: 40px 20px;
+            overflow-x: auto;
         }
 
-        .carousel-container {
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            letter-spacing: 4px;
+            color: #2c3e50;
+            text-transform: uppercase;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1rem;
+            color: #7f8c8d;
+            margin-top: 5px;
+            letter-spacing: 2px;
+        }
+
+        /* Timeline Container */
+        .timeline-container {
             position: relative;
             width: 100%;
             max-width: 1200px;
-            height: 550px;
+            min-width: 1000px; /* Đảm bảo không bị vỡ layout trên màn hình nhỏ */
+            height: 500px;
             display: flex;
-            justify-content: center;
             align-items: center;
-            cursor: grab;
-            user-select: none;
-            overflow: visible;
+            justify-content: space-between;
+            padding: 0 50px;
         }
 
-        .carousel-container:active {
-            cursor: grabbing;
-        }
-
-        .carousel-track {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transform-style: preserve-3d;
-        }
-
-        .slide {
+        /* Trục nằm ngang ở giữa */
+        .main-line {
             position: absolute;
-            width: 300px; 
-            height: 400px; /* Tỷ lệ đứng chuẩn 3:4 */
-            border-radius: 24px;
-            overflow: hidden;
-            transform-style: preserve-3d;
-            will-change: transform, filter, opacity;
-            transition: transform var(--duration) var(--apple-easing), 
-                        filter var(--duration) var(--apple-easing), 
-                        opacity var(--duration) var(--apple-easing),
-                        box-shadow var(--duration) var(--apple-easing);
-            opacity: 0;
-            pointer-events: none;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-        }
-
-        .slide-blur-bg {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-size: cover;
-            background-position: center;
-            filter: blur(30px);
-            opacity: 0;
-            transform: scale(0.95) translateZ(-20px);
-            transition: opacity var(--duration) var(--apple-easing);
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .slide.active .slide-blur-bg {
-            opacity: 0.2; /* Hiệu ứng đổ bóng màu nhẹ nhàng */
-        }
-
-        .slide-media {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Tự động crop ảnh vừa vặn 3:4 */
-            border-radius: 24px;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 8px;
+            background-color: var(--line-color);
+            transform: translateY(-50%);
             z-index: 1;
-            pointer-events: none;
+            border-radius: 4px;
         }
 
-        /* ---- CÁC TRẠNG THÁI HIỂN THỊ KHÔNG GIAN 3D ---- */
-        .slide.active {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateX(0) translateZ(200px) scale(1.12);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12), 0 10px 20px rgba(0, 0, 0, 0.06);
+        /* Từng mốc thời gian */
+        .timeline-node {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2;
+            width: 15%;
+        }
+
+        /* Nút tròn chứa số */
+        .node-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 4px solid var(--line-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #333;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* Nhánh nối đứng lên hoặc xuống */
+        .branch-line {
+            position: absolute;
+            width: 4px;
+            background-color: var(--line-color);
+            transition: all 0.4s ease;
+        }
+
+        /* Nội dung chú thích */
+        .content-box {
+            position: absolute;
+            width: 180px;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        .content-box h3 {
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .content-box p {
+            font-size: 0.8rem;
+            color: #555;
+            line-height: 1.35;
+        }
+
+        /* Xếp xen kẽ Trên/Dưới giống ảnh mẫu */
+        
+        /* CÁC MỐC NẰM DƯỚI (Số lẻ: 1, 3, 5) */
+        .node-odd .branch-line {
+            top: 60px;
+            height: 50px;
+        }
+        .node-odd .content-box {
+            top: 120px;
+        }
+
+        /* CÁC MỐC NẰM TRÊN (Số chẵn: 2, 4, 6) */
+        .node-even .branch-line {
+            bottom: 60px;
+            height: 50px;
+        }
+        .node-even .content-box {
+            bottom: 120px;
+        }
+
+        /* Định nghĩa màu sắc & hover riêng biệt cho từng mốc */
+        
+        /* Mốc 1 */
+        .node-1 .node-circle { border-color: var(--color-1); color: var(--color-1); }
+        .node-1 .branch-line { background-color: var(--color-1); }
+        .node-1 .content-box h3 { color: var(--color-1); }
+
+        /* Mốc 2 */
+        .node-2 .node-circle { border-color: var(--color-2); color: var(--color-2); }
+        .node-2 .branch-line { background-color: var(--color-2); }
+        .node-2 .content-box h3 { color: var(--color-2); }
+
+        /* Mốc 3 */
+        .node-3 .node-circle { border-color: var(--color-3); color: var(--color-3); }
+        .node-3 .branch-line { background-color: var(--color-3); }
+        .node-3 .content-box h3 { color: var(--color-3); }
+
+        /* Mốc 4 */
+        .node-4 .node-circle { border-color: var(--color-4); color: var(--color-4); }
+        .node-4 .branch-line { background-color: var(--color-4); }
+        .node-4 .content-box h3 { color: var(--color-4); }
+
+        /* Mốc 5 */
+        .node-5 .node-circle { border-color: var(--color-5); color: var(--color-5); }
+        .node-5 .branch-line { background-color: var(--color-5); }
+        .node-5 .content-box h3 { color: var(--color-5); }
+
+        /* Mốc 6 */
+        .node-6 .node-circle { border-color: var(--color-6); color: var(--color-6); }
+        .node-6 .branch-line { background-color: var(--color-6); }
+        .node-6 .content-box h3 { color: var(--color-6); }
+
+
+        /* HIỆU ỨNG HOVER (Mượt mà, nổi bật) */
+        .timeline-node:hover .node-circle {
+            transform: scale(1.25);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            background-color: #fff;
             z-index: 10;
         }
 
-        .slide.next-1 {
-            opacity: 0.9;
-            pointer-events: auto;
-            transform: translateX(180px) translateZ(50px) scale(0.88);
-            filter: blur(1px);
-            z-index: 5;
+        .timeline-node:hover .branch-line {
+            width: 6px;
+            filter: brightness(1.1);
         }
 
-        .slide.next-2 {
-            opacity: 0.45;
-            transform: translateX(340px) translateZ(-60px) scale(0.7);
-            filter: blur(3px);
-            z-index: 3;
+        .timeline-node:hover .content-box {
+            transform: translateY(calc(var(--dir, 1) * 8px));
+            filter: drop-shadow(0px 5px 5px rgba(0,0,0,0.1));
         }
 
-        .slide.prev-1 {
-            opacity: 0.9;
-            pointer-events: auto;
-            transform: translateX(-180px) translateZ(50px) scale(0.88);
-            filter: blur(1px);
-            z-index: 5;
-        }
+        /* Định hướng dịch chuyển khi hover */
+        .node-odd:hover { --dir: 1; }
+        .node-even:hover { --dir: -1; }
 
-        .slide.prev-2 {
-            opacity: 0.45;
-            transform: translateX(-340px) translateZ(-60px) scale(0.7);
-            filter: blur(3px);
-            z-index: 3;
-        }
-
-        .slide.hidden {
-            opacity: 0;
-            transform: translateX(0) translateZ(-200px) scale(0.5);
-            z-index: 1;
-        }
-
-        /* Responsive mượt mà cho Mobile/Tablet */
-        @media (max-width: 768px) {
-            .carousel-container { height: 420px; }
-            .slide { width: 210px; height: 280px; }
-            .slide.active { transform: translateX(0) translateZ(100px) scale(1.1); }
-            .slide.next-1 { transform: translateX(115px) translateZ(30px) scale(0.85); filter: blur(0.5px); }
-            .slide.prev-1 { transform: translateX(-115px) translateZ(30px) scale(0.85); filter: blur(0.5px); }
-            .slide.next-2, .slide.prev-2 { opacity: 0; transform: translateX(0) translateZ(-100px); }
-        }
     </style>
 </head>
 <body>
 
-    <div class="carousel-container" id="carousel">
-        <div class="carousel-track" id="track">
-            <!-- HIỂN THỊ ĐỦ 10 ẢNH TỪ REPOSITORY GITHUB CỦA BẠN -->
-            <div class="slide" data-index="0">
-                <div class="slide-blur-bg" style="background-image: url('./1.jpg');"></div>
-                <img class="slide-media" data-src="./1.jpg" alt="Ảnh 1">
-            </div>
-            <div class="slide" data-index="1">
-                <div class="slide-blur-bg" style="background-image: url('./2.jpg');"></div>
-                <img class="slide-media" data-src="./2.jpg" alt="Ảnh 2">
-            </div>
-            <div class="slide" data-index="2">
-                <div class="slide-blur-bg" style="background-image: url('./3.jpg');"></div>
-                <img class="slide-media" data-src="./3.jpg" alt="Ảnh 3">
-            </div>
-            <div class="slide" data-index="3">
-                <div class="slide-blur-bg" style="background-image: url('./4.jpg');"></div>
-                <img class="slide-media" data-src="./4.jpg" alt="Ảnh 4">
-            </div>
-            <!-- Mặc định ban đầu ảnh số 5 (index 4) nằm giữa tiêu điểm -->
-            <div class="slide" data-index="4">
-                <div class="slide-blur-bg" style="background-image: url('./5.jpg');"></div>
-                <img class="slide-media" data-src="./5.jpg" alt="Ảnh 5">
-            </div>
-            <div class="slide" data-index="5">
-                <div class="slide-blur-bg" style="background-image: url('./6.jpg');"></div>
-                <img class="slide-media" data-src="./6.jpg" alt="Ảnh 6">
-            </div>
-            <div class="slide" data-index="6">
-                <div class="slide-blur-bg" style="background-image: url('./7.jpg');"></div>
-                <img class="slide-media" data-src="./7.jpg" alt="Ảnh 7">
-            </div>
-            <div class="slide" data-index="7">
-                <div class="slide-blur-bg" style="background-image: url('./8.jpg');"></div>
-                <img class="slide-media" data-src="./8.jpg" alt="Ảnh 8">
-            </div>
-            <div class="slide" data-index="8">
-                <div class="slide-blur-bg" style="background-image: url('./9.jpg');"></div>
-                <img class="slide-media" data-src="./9.jpg" alt="Ảnh 9">
-            </div>
-            <div class="slide" data-index="9">
-                <div class="slide-blur-bg" style="background-image: url('./10.jpg');"></div>
-                <img class="slide-media" data-src="./10.jpg" alt="Ảnh 10">
-            </div>
-        </div>
+    <div class="header">
+        <h1>TIẾN HÓA LOÀI NGƯỜI</h1>
+        <p>BẢN ĐẦY ĐỦ - THẾ GIỚI & VIỆT NAM</p>
     </div>
 
-    <script>
-        const carousel = document.getElementById('carousel');
-        const slides = Array.from(document.querySelectorAll('.slide'));
-        const totalSlides = slides.length;
-        
-        let currentIndex = 4; // Vị trí ảnh trung tâm ban đầu
-        let isDragging = false;
-        let startX = 0;
-        let currentTranslate = 0;
-        let autoPlayTimer = null;
+    <div class="timeline-container">
+        <div class="main-line"></div>
 
-        function lazyLoadImages() {
-            slides.forEach(slide => {
-                const img = slide.querySelector('.slide-media');
-                if (img && img.getAttribute('data-src') && !img.src) {
-                    img.src = img.getAttribute('data-src');
-                }
-            });
-        }
+        <!-- Mốc 1: Dưới -->
+        <div class="timeline-node node-odd node-1">
+            <div class="node-circle">01</div>
+            <div class="branch-line"></div>
+            <div class="content-box">
+                <h3>Australopithecus</h3>
+                <p><strong>~4 - 2 triệu năm trước.</strong> Thể tích não nhỏ (400-500cm³), đã bắt đầu đi bằng hai chân, sống chủ yếu ở châu Phi.</p>
+            </div>
+        </div>
 
-        // --- CẬP NHẬT GIẢI THUẬT PHÂN PHỐI 3D CHO SỐ LƯỢNG 10 ẢNH VÒNG LẶP ---
-        function updateCarousel() {
-            slides.forEach((slide, i) => {
-                let offset = i - currentIndex;
-                
-                // Thuật toán cuốn vòng tròn
-                if (offset < -totalSlides / 2) offset += totalSlides;
-                if (offset > totalSlides / 2) offset -= totalSlides;
-                
-                // Xử lý điểm đối diện rìa xa nhất cho số lượng chẵn (10 ảnh)
-                if (offset === totalSlides / 2 || offset === -totalSlides / 2) {
-                    offset = totalSlides / 2; 
-                }
+        <!-- Mốc 2: Trên -->
+        <div class="timeline-node node-even node-2">
+            <div class="content-box">
+                <h3>Homo habilis</h3>
+                <p><strong>~2.4 - 1.4 triệu năm trước.</strong> Người khéo léo, biết chế tạo và sử dụng công cụ thô sơ bằng đá mảnh thô.</p>
+            </div>
+            <div class="branch-line"></div>
+            <div class="node-circle">02</div>
+        </div>
 
-                slide.className = 'slide';
+        <!-- Mốc 3: Dưới -->
+        <div class="timeline-node node-odd node-3">
+            <div class="node-circle">03</div>
+            <div class="branch-line"></div>
+            <div class="content-box">
+                <h3>Homo erectus</h3>
+                <p><strong>~1.8 triệu - 100k năm trước.</strong> Người tối cổ đi đứng thẳng, biết dùng lửa. Dấu vết khảo cổ tại VN đạt khoảng 800.000 - 500.000 năm (Lạng Sơn, Thanh Hóa).</p>
+            </div>
+        </div>
 
-                if (offset === 0) {
-                    slide.classList.add('active');
-                } else if (offset === 1) {
-                    slide.classList.add('next-1');
-                } else if (offset === 2) {
-                    slide.classList.add('next-2');
-                } else if (offset === -1) {
-                    slide.classList.add('prev-1');
-                } else if (offset === -2) {
-                    slide.classList.add('prev-2');
-                } else {
-                    slide.classList.add('hidden');
-                }
-            });
-        }
+        <!-- Mốc 4: Trên -->
+        <div class="timeline-node node-even node-4">
+            <div class="content-box">
+                <h3>Neanderthal</h3>
+                <p><strong>~400k - 40k năm trước.</strong> Cơ thể vạm vỡ, thích nghi khí hậu lạnh cực tốt, đã có các nghi thức chôn cất nguyên thủy.</p>
+            </div>
+            <div class="branch-line"></div>
+            <div class="node-circle">04</div>
+        </div>
 
-        function nextSlide() {
-            currentIndex = (currentIndex + 1) % totalSlides;
-            updateCarousel();
-        }
+        <!-- Mốc 5: Dưới -->
+        <div class="timeline-node node-odd node-5">
+            <div class="node-circle">05</div>
+            <div class="branch-line"></div>
+            <div class="content-box">
+                <h3>Homo sapiens</h3>
+                <p><strong>~300k năm trước - nay.</strong> Người hiện đại sớm. Xuất hiện tại Việt Nam khoảng 40.000 - 30.000 năm trước (Văn hóa Sơn Vi, Hòa Bình), biết chế tác công cụ tinh xảo.</p>
+            </div>
+        </div>
 
-        function prevSlide() {
-            currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
-            updateCarousel();
-        }
+        <!-- Mốc 6: Trên -->
+        <div class="timeline-node node-even node-6">
+            <div class="content-box">
+                <h3>Sapiens Sapiens</h3>
+                <p><strong>Hiện đại.</strong> Tư duy trừu tượng, phát triển ngôn ngữ phức tạp, khoa học công nghệ và kiến tạo xã hội văn minh toàn cầu.</p>
+            </div>
+            <div class="branch-line"></div>
+            <div class="node-circle">06</div>
+        </div>
 
-        function startAutoPlay() {
-            stopAutoPlay();
-            autoPlayTimer = setInterval(nextSlide, 2750);
-        }
+    </div>
 
-        function stopAutoPlay() {
-            if (autoPlayTimer) clearInterval(autoPlayTimer);
-        }
-
-        function handleStart(e) {
-            stopAutoPlay();
-            isDragging = true;
-            startX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
-        }
-
-        function handleMove(e) {
-            if (!isDragging) return;
-            const currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
-            currentTranslate = currentX - startX;
-        }
-
-        function handleEnd() {
-            if (!isDragging) return;
-            isDragging = false;
-            if (currentTranslate < -40) nextSlide();
-            else if (currentTranslate > 40) prevSlide();
-            currentTranslate = 0;
-            startAutoPlay();
-        }
-
-        let lastWheelTime = 0;
-        function handleWheel(e) {
-            e.preventDefault();
-            const now = performance.now();
-            if (now - lastWheelTime < 750) return;
-
-            stopAutoPlay();
-            if (e.deltaY > 0 || e.deltaX > 0) nextSlide();
-            else prevSlide();
-            lastWheelTime = now;
-            startAutoPlay();
-        }
-
-        carousel.addEventListener('mousedown', handleStart);
-        carousel.addEventListener('mousemove', handleMove);
-        window.addEventListener('mouseup', handleEnd);
-
-        carousel.addEventListener('touchstart', handleStart);
-        carousel.addEventListener('touchmove', handleMove);
-        window.addEventListener('touchend', handleEnd);
-
-        carousel.addEventListener('wheel', handleWheel, { passive: false });
-
-        slides.forEach(slide => {
-            slide.addEventListener('click', () => {
-                stopAutoPlay();
-                currentIndex = parseInt(slide.getAttribute('data-index'));
-                updateCarousel();
-                startAutoPlay();
-            });
-        });
-
-        lazyLoadImages();
-        updateCarousel();
-        startAutoPlay();
-    </script>
 </body>
 </html>
